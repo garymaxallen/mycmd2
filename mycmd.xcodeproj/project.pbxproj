@@ -11,7 +11,7 @@
 		6391A52C29BDB1E900E52672 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6391A52B29BDB1E900E52672 /* SceneDelegate.swift */; };
 		6391A52E29BDB1E900E52672 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6391A52D29BDB1E900E52672 /* ViewController.swift */; };
 		6391A53329BDB1EA00E52672 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6391A53229BDB1EA00E52672 /* Assets.xcassets */; };
-		6391A53E29BDB40E00E52672 /* consola.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6391A53D29BDB40E00E52672 /* consola.ttf */; };
+		6391A54029BDBBF800E52672 /* consola.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6391A53F29BDBBF700E52672 /* consola.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,7 +21,7 @@
 		6391A52D29BDB1E900E52672 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		6391A53229BDB1EA00E52672 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6391A53729BDB1EA00E52672 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		6391A53D29BDB40E00E52672 /* consola.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = consola.ttf; sourceTree = "<group>"; };
+		6391A53F29BDBBF700E52672 /* consola.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = consola.ttf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,12 +54,12 @@
 		6391A52829BDB1E900E52672 /* mycmd */ = {
 			isa = PBXGroup;
 			children = (
+				6391A53F29BDBBF700E52672 /* consola.ttf */,
 				6391A52929BDB1E900E52672 /* AppDelegate.swift */,
 				6391A52B29BDB1E900E52672 /* SceneDelegate.swift */,
 				6391A52D29BDB1E900E52672 /* ViewController.swift */,
 				6391A53229BDB1EA00E52672 /* Assets.xcassets */,
 				6391A53729BDB1EA00E52672 /* Info.plist */,
-				6391A53D29BDB40E00E52672 /* consola.ttf */,
 			);
 			path = mycmd;
 			sourceTree = "<group>";
@@ -122,7 +122,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6391A53E29BDB40E00E52672 /* consola.ttf in Resources */,
+				6391A54029BDBBF800E52672 /* consola.ttf in Resources */,
 				6391A53329BDB1EA00E52672 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

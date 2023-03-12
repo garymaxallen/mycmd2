@@ -18,11 +18,12 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         NSLog("com.gg.mycmd.log: %@", "fdasfasfasfasfasdffasa")
+//        log stream --process mycmd --style syslog | grep "com.gg.mycmd.log:"
         super.viewDidLoad()
         view.backgroundColor = UIColor.black
         // Do any additional setup after loading the view.
         // setScrollView1()
-        // listFont()
+         listFont()
         // setTextView()
         setMyView()
     }
@@ -36,6 +37,14 @@ class ViewController: UIViewController {
         // textView.text = String(cString: str1!, encoding: .utf8)!
         //        getipnum(nil)
     }
+    
+    func listFont() {
+            for family in UIFont.familyNames {
+                for font in UIFont.fontNames(forFamilyName: family) {
+                    NSLog("com.gg.mycmd.log: family: %@ font: %@", family, font)
+                }
+            }
+        }
     
     func setMyView() {
         textField.frame = CGRect(x: 10, y: 100, width: 400.00, height: 50.00)
