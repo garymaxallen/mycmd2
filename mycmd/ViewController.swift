@@ -143,11 +143,11 @@ class ViewController: UIViewController, historyVCDelegate {
     @objc func pressHistory() {
         let historyVC = historyVC()
         historyVC.delegate = self // used for historyVCDelegate
-        let navController = UINavigationController(rootViewController: historyVC)
-        historyVC.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.done, target: self, action: #selector(dismissHistory))
-        historyVC.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.cancel, target: self, action: #selector(dismissHistory))
+//        let navController = UINavigationController(rootViewController: historyVC)
+//        historyVC.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.done, target: self, action: #selector(dismissHistory))
+//        historyVC.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.cancel, target: self, action: #selector(dismissHistory))
         
-        self.present(navController, animated: true, completion: nil)
+        self.present(historyVC, animated: true, completion: nil)
     }
     
     @objc func dismissHistory() {
@@ -155,9 +155,23 @@ class ViewController: UIViewController, historyVCDelegate {
     }
     
     func sampleData(){
+        var cmdArray0: [String] = []
         for i in 0...99{
-            UserDefaults.standard.set("value ggg"+String(i), forKey: "key"+String(i))
+            cmdArray0.append("value ucloud"+String(i))
         }
+        UserDefaults.standard.set(cmdArray0, forKey: "mycmdKey0")
+        
+        var cmdArray1: [String] = []
+        for i in 0...50{
+            cmdArray1.append("value google drive"+String(i))
+        }
+        UserDefaults.standard.set(cmdArray1, forKey: "mycmdKey1")
+        
+        var cmdArray2: [String] = []
+        for i in 0...60{
+            cmdArray2.append("value imap"+String(i))
+        }
+        UserDefaults.standard.set(cmdArray2, forKey: "mycmdKey2")
     }
     
     //    func saveData(_ value: String) {
@@ -183,37 +197,55 @@ class historyVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     weak var delegate: historyVCDelegate? = nil
     
-    private var myArray: NSArray = ["First","Second","Third"]
-    private var myTableView: UITableView!
+    //    private var myArray: NSArray = ["First","Second","Third"]
+    var myTableView: UITableView!
+    //    var cmdArray = ["one", "two", "three"]
+    var scIndex = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = UIColor.systemBackground
         
-        myTableView = UITableView(frame:CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height))
+        let mySC = UISegmentedControl (items: ["UCloud","Google Drive","IMAP"])
+        mySC.frame = CGRect(x: 50, y: 20, width: 300, height: 30)
+        mySC.selectedSegmentIndex = scIndex
+        mySC.tintColor = UIColor.yellow
+        mySC.backgroundColor = UIColor.systemGray
+        mySC.addTarget(self, action: #selector(self.segmentedValueChanged(_:)), for: .valueChanged)
+        self.view.addSubview(mySC)
+        
+        myTableView = UITableView(frame:CGRect(x: 0, y: 60, width: self.view.frame.width, height: self.view.frame.height))
         myTableView.register(UITableViewCell.self, forCellReuseIdentifier: "MyCell")
         myTableView.dataSource = self
         myTableView.delegate = self
         self.view.addSubview(myTableView)
     }
     
+    @objc func segmentedValueChanged(_ sender:UISegmentedControl!){
+        print("Selected Segment Index is : \(sender.selectedSegmentIndex)")
+        scIndex = sender.selectedSegmentIndex
+        myTableView.reloadData()
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         NSLog("com.gg.mycmd.log: didSelectRowAt %d", indexPath.row)
         //        print("Num: \(indexPath.row)")
         //        print("Value: \(myArray[indexPath.row])")
-        delegate?.userDidEnterInformation(info: UserDefaults.standard.string(forKey: "key"+String(indexPath.row))!)
+        delegate?.userDidEnterInformation(info: (UserDefaults.standard.array(forKey: "mycmdKey"+String(scIndex))![indexPath.row] as? String)!)
         self.dismiss(animated: true)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         //        return myArray.count
         NSLog("com.gg.mycmd.log: keys count: %d", UserDefaults.standard.dictionaryRepresentation().keys.count)
-        return myArray.count
+        //        return cmdArray.count
+        return UserDefaults.standard.array(forKey: "mycmdKey"+String(scIndex))!.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for: indexPath as IndexPath)
-                cell.textLabel!.text = "\(myArray[indexPath.row])"
-//        cell.textLabel!.text = UserDefaults.standard.string(forKey: "key"+String(indexPath.row))!
+        //                cell.textLabel!.text = "\(myArray[indexPath.row])"
+        cell.textLabel!.text = UserDefaults.standard.array(forKey: "mycmdKey"+String(scIndex))![indexPath.row] as? String
         return cell
     }
     
@@ -225,11 +257,18 @@ class historyVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         if editingStyle == UITableViewCell.EditingStyle.delete {
             NSLog("com.gg.mycmd.log: delete row: %d", indexPath.row)
             
-            UserDefaults.standard.removeObject(forKey: "key"+String(indexPath.row))
-            myArray = ["First","Second"]
-            self.myTableView.beginUpdates()
-            self.myTableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
-            self.myTableView.endUpdates()
+            let alert = UIAlertController(title: nil, message: "Are you sure you'd like to delete this cell", preferredStyle: UIAlertController.Style.alert)
+            
+            alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) { _ in
+                var cmdArray = UserDefaults.standard.array(forKey: "mycmdKey"+String(self.scIndex))
+                cmdArray?.remove(at: indexPath.row)
+                UserDefaults.standard.set(cmdArray, forKey: "mycmdKey"+String(self.scIndex))
+                self.myTableView.beginUpdates()
+                self.myTableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
+                self.myTableView.endUpdates()
+            })
+            alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
+            present(alert, animated: true, completion: nil)
         }
     }
 }
