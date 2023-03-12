@@ -6,25 +6,30 @@
 //
 
 import UIKit
+import WebKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, historyVCDelegate {
     
     let screenWidth = UIScreen.main.bounds.size.width
     let screenHeight = UIScreen.main.bounds.size.height
     
     let textView = UITextView()
-    
     let textField = UITextField()
+    let runButton = UIButton(type: UIButton.ButtonType.system)
+    let saveButton = UIButton(type: UIButton.ButtonType.system)
+    let historyButton = UIButton(type: UIButton.ButtonType.system)
     
     override func viewDidLoad() {
-        NSLog("com.gg.mycmd.log: %@", "fdasfasfasfasfasdffasa")
-//        log stream --process mycmd --style syslog | grep "com.gg.mycmd.log:"
         super.viewDidLoad()
-        view.backgroundColor = UIColor.black
-        // Do any additional setup after loading the view.
+        NSLog("com.gg.mycmd.log: %@", "fdasfasfasfasfasdffasa")
+        //        log stream --process mycmd --style syslog | grep "com.gg.mycmd.log:"
+        //        view.backgroundColor = UIColor.black
+        //        view.backgroundColor = UIColor.systemBackground
+        self.view.backgroundColor = UIColor.systemCyan
         // setScrollView1()
-         listFont()
+        //         listFont()
         // setTextView()
+        sampleData()
         setMyView()
     }
     
@@ -39,24 +44,59 @@ class ViewController: UIViewController {
     }
     
     func listFont() {
-            for family in UIFont.familyNames {
-                for font in UIFont.fontNames(forFamilyName: family) {
-                    NSLog("com.gg.mycmd.log: family: %@ font: %@", family, font)
-                }
+        for family in UIFont.familyNames {
+            for font in UIFont.fontNames(forFamilyName: family) {
+                NSLog("com.gg.mycmd.log: family: %@ font: %@", family, font)
             }
         }
+    }
     
     func setMyView() {
-        textField.frame = CGRect(x: 10, y: 100, width: 400.00, height: 50.00)
+        textField.frame = CGRect(x: 10, y: 50, width: screenWidth - 20 - 60 - 10, height: 50)
         textField.backgroundColor = UIColor.black
+        //        textField.backgroundColor = UIColor.systemCyan
         textField.textColor = UIColor.white
         textField.font = UIFont(name: "Consolas", size: 24)
         textField.attributedPlaceholder = NSAttributedString(string: "input command here ...",
-                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
-        textField.addTarget(self, action: #selector(inputDone), for: UIControl.Event.editingDidEndOnExit)
-        view.addSubview(textField)
+                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemCyan])
+        textField.addTarget(self, action: #selector(resignFirstResponder), for: UIControl.Event.editingDidEndOnExit)
+        self.view.addSubview(textField)
         
-        textView.frame = CGRect(x: 10, y: 200, width: 400.00, height: 700.00)
+        runButton.frame = CGRect(x: screenWidth - 70, y: 50, width: 60, height: 50)
+        runButton.backgroundColor = UIColor.systemBlue
+        runButton.setTitle("RUN", for: UIControl.State.normal)
+        runButton.setTitleColor(UIColor.black, for: UIControl.State.normal)
+        runButton.backgroundColor = UIColor.systemBackground
+        runButton.addTarget(self, action: #selector(pressRun), for: UIControl.Event.touchUpInside)
+        runButton.layer.borderWidth = 1
+        runButton.layer.borderColor = UIColor.black.cgColor
+        runButton.layer.cornerRadius = 8
+        self.view.addSubview(runButton)
+        
+        saveButton.frame = CGRect(x: 10, y: 110, width: 60, height: 50)
+        saveButton.backgroundColor = UIColor.systemBlue
+        saveButton.setTitle("SAVE", for: UIControl.State.normal)
+        saveButton.setTitleColor(UIColor.black, for: UIControl.State.normal)
+        saveButton.backgroundColor = UIColor.systemBackground
+        saveButton.addTarget(self, action: #selector(pressSave), for: UIControl.Event.touchUpInside)
+        saveButton.layer.borderWidth = 1
+        saveButton.layer.borderColor = UIColor.black.cgColor
+        saveButton.layer.cornerRadius = 8
+        self.view.addSubview(saveButton)
+        
+        historyButton.frame = CGRect(x: 80, y: 110, width: 60, height: 50)
+        historyButton.backgroundColor = UIColor.systemBlue
+        historyButton.setTitle("HISTORY", for: UIControl.State.normal)
+        historyButton.setTitleColor(UIColor.black, for: UIControl.State.normal)
+        historyButton.titleLabel?.font =  UIFont(name: "Consolas", size: 12)
+        historyButton.backgroundColor = UIColor.systemBackground
+        historyButton.addTarget(self, action: #selector(pressHistory), for: UIControl.Event.touchUpInside)
+        historyButton.layer.borderWidth = 1
+        historyButton.layer.borderColor = UIColor.black.cgColor
+        historyButton.layer.cornerRadius = 8
+        self.view.addSubview(historyButton)
+        
+        textView.frame = CGRect(x: 10, y: 200, width: screenWidth - 20, height: 700)
         textView.backgroundColor = UIColor.black
         textView.textColor = UIColor.white
         textView.font = UIFont(name: "Consolas", size: 24)
@@ -72,14 +112,124 @@ class ViewController: UIViewController {
         view.addSubview(textView)
     }
     
-    @objc func inputDone() {
-        textField.resignFirstResponder()
-        textView.text = textField.text
+    @objc func pressRun() {
+        //        textField.resignFirstResponder()
+        textView.text = textView.text+"\n"+textField.text!
         //        textView.text = String(cString: getipnum(nil))
         //        textView.text = String(getipnum())
         //        textView.text = String(cString: listVM(100, 0))
         // gotest()
+        //        textView.text = getData()
+    }
+    
+    @objc func pressSave() {
+        //        saveData(textField.text!)
+    }
+    
+    //    @objc func pressHistory() {
+    //        let mywebViewController = UIViewController()
+    //        let webView = WKWebView(frame: CGRect.zero, configuration: WKWebViewConfiguration())
+    //        webView.load(URLRequest(url: URL(string: "https://www.apple.com")!)) // url from the row a user taps
+    //        mywebViewController.view = webView
+    //        //        self.present(mywebViewController, animated: true, completion: nil)
+    //
+    //        let navController = UINavigationController(rootViewController: mywebViewController)
+    //        mywebViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.done, target: self, action: #selector(dismissHistory))
+    //        mywebViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.cancel, target: self, action: #selector(dismissHistory))
+    //
+    //        self.present(navController, animated: true, completion: nil)
+    //    }
+    
+    @objc func pressHistory() {
+        let historyVC = historyVC()
+        historyVC.delegate = self // used for historyVCDelegate
+        let navController = UINavigationController(rootViewController: historyVC)
+        historyVC.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.done, target: self, action: #selector(dismissHistory))
+        historyVC.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.cancel, target: self, action: #selector(dismissHistory))
+        
+        self.present(navController, animated: true, completion: nil)
+    }
+    
+    @objc func dismissHistory() {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    func sampleData(){
+        for i in 0...99{
+            UserDefaults.standard.set("value ggg"+String(i), forKey: "key"+String(i))
+        }
+    }
+    
+    //    func saveData(_ value: String) {
+    //        UserDefaults.standard.set(value, forKey: "key1")
+    //    }
+    //
+    //    func getData() -> String{
+    //        return UserDefaults.standard.string(forKey: "key1")!
+    //    }
+    
+    func userDidEnterInformation(info: String) {
+        NSLog("com.gg.mycmd.log: userDidEnterInformation")
+        textField.text = info
     }
     
 }
 
+protocol historyVCDelegate: AnyObject {
+    func userDidEnterInformation(info: String)
+}
+
+class historyVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
+    weak var delegate: historyVCDelegate? = nil
+    
+    private var myArray: NSArray = ["First","Second","Third"]
+    private var myTableView: UITableView!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        myTableView = UITableView(frame:CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height))
+        myTableView.register(UITableViewCell.self, forCellReuseIdentifier: "MyCell")
+        myTableView.dataSource = self
+        myTableView.delegate = self
+        self.view.addSubview(myTableView)
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        NSLog("com.gg.mycmd.log: didSelectRowAt %d", indexPath.row)
+        //        print("Num: \(indexPath.row)")
+        //        print("Value: \(myArray[indexPath.row])")
+        delegate?.userDidEnterInformation(info: UserDefaults.standard.string(forKey: "key"+String(indexPath.row))!)
+        self.dismiss(animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        //        return myArray.count
+        NSLog("com.gg.mycmd.log: keys count: %d", UserDefaults.standard.dictionaryRepresentation().keys.count)
+        return myArray.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for: indexPath as IndexPath)
+                cell.textLabel!.text = "\(myArray[indexPath.row])"
+//        cell.textLabel!.text = UserDefaults.standard.string(forKey: "key"+String(indexPath.row))!
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == UITableViewCell.EditingStyle.delete {
+            NSLog("com.gg.mycmd.log: delete row: %d", indexPath.row)
+            
+            UserDefaults.standard.removeObject(forKey: "key"+String(indexPath.row))
+            myArray = ["First","Second"]
+            self.myTableView.beginUpdates()
+            self.myTableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
+            self.myTableView.endUpdates()
+        }
+    }
+}
