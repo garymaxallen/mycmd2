@@ -222,6 +222,7 @@ class historyVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     myTableView.register(UITableViewCell.self, forCellReuseIdentifier: "MyCell")
     myTableView.dataSource = self
     myTableView.delegate = self
+    // self.myTableView.isEditing = true
     self.view.addSubview(myTableView)
   }
 
@@ -286,5 +287,33 @@ class historyVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
       present(alert, animated: true, completion: nil)
     }
+  }
+
+  // func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+  //   return true
+  // }
+
+  // func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath)
+  //   -> UITableViewCell.EditingStyle
+  // {
+  //   return UITableViewCell.EditingStyle.none
+  //   // return UITableViewCell.EditingStyle.delete
+  // }
+
+  func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath)
+    -> Bool
+  {
+    return false
+  }
+
+  func tableView(
+    _ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath,
+    to destinationIndexPath: IndexPath
+  ) {
+    var cmdArray = UserDefaults.standard.array(forKey: "mycmdKey" + String(self.scIndex))
+    let movedRow = cmdArray?[sourceIndexPath.row]
+    cmdArray?.remove(at: sourceIndexPath.row)
+    cmdArray?.insert(movedRow!, at: destinationIndexPath.row)
+    UserDefaults.standard.set(cmdArray, forKey: "mycmdKey" + String(self.scIndex))
   }
 }
