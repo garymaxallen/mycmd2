@@ -1,3 +1,4 @@
+#log stream --process mycmd --style syslog | grep "com.gg.mycmd.log:"
 #xcode-select --switch /Applications/Xcode.app/Contents/Developer
 #xcodebuild -showsdks
 xcrun simctl uninstall booted com.gg.mycmd
