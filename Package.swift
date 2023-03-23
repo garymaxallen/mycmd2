@@ -3,18 +3,18 @@
 
 import PackageDescription
 
-let packageName = "mycmd"  // <-- Change this to yours
+let packageName = "mycmd" // <-- Change this to yours
 let package = Package(
   name: "mycmd",
   defaultLocalization: "en",
   platforms: [.iOS("16.2")],
   products: [
-    .library(name: packageName, targets: [packageName])
+    .library(name: packageName, targets: [packageName]),
   ],
   targets: [
     .target(
       name: packageName,
       path: packageName
-    )
+    ),
   ]
 )

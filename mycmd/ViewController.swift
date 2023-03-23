@@ -5,22 +5,9 @@
 //  Created by pcl on 3/12/23.
 //
 
-// import WebKit
-import CryptoKit
 import UIKit
 
-extension Digest {
-  var bytes: [UInt8] { Array(makeIterator()) }
-  var data: Data { Data(bytes) }
-
-  var hexStr: String {
-    bytes.map { String(format: "%02x", $0) }.joined()   // lower case
-    // bytes.map { String(format: "%02X", $0) }.joined() // upper case
-  }
-}
-
 class ViewController: UIViewController, historyVCDelegate {
-
   let screenWidth = UIScreen.main.bounds.size.width
   let screenHeight = UIScreen.main.bounds.size.height
 
@@ -36,75 +23,69 @@ class ViewController: UIViewController, historyVCDelegate {
     //        log stream --process mycmd --style syslog | grep "com.gg.mycmd.log:"
     //        view.backgroundColor = UIColor.black
     //        view.backgroundColor = UIColor.systemBackground
-    self.view.backgroundColor = UIColor.systemCyan
-    // setScrollView1()
-    //         listFont()
-    // setTextView()
+    view.backgroundColor = UIColor.systemCyan
+    setMyView()
+
     // sampleData()
-    // setMyView()
-    ucloud(5, 0)
+    createFile()
+    createFolder()
+    readFile()
+  }
+
+  func listFiles() {
+    do {
+      let urls = try FileManager.default.contentsOfDirectory(at: FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask)[0], includingPropertiesForKeys: nil)
+      for url in urls {
+        NSLog("com.gg.mycmd.log: list files: %@", url.absoluteString)
+        NSLog("com.gg.mycmd.log: lastPathComponent: %@", url.lastPathComponent)
+      }
+    } catch {
+      NSLog("com.gg.mycmd.log: error: %@", error.localizedDescription)
+    }
+  }
+
+  func readFile() {
+    do {
+      let urls = try FileManager.default.contentsOfDirectory(at: FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask)[0], includingPropertiesForKeys: nil)
+      for url in urls {
+        NSLog("com.gg.mycmd.log: list files: %@", url.absoluteString)
+        if url.lastPathComponent == "output.txt" {
+          let output = try String(contentsOf: url, encoding: String.Encoding.utf8)
+          textView.text = output
+          NSLog("com.gg.mycmd.log: list files: %@", output)
+        }
+      }
+    } catch {
+      NSLog("com.gg.mycmd.log: error: %@", error.localizedDescription)
+    }
+  }
+
+  func createFile() {
+    let str = "Super long string here"
+    let filename = FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask)[0].appendingPathComponent("output.txt")
+    NSLog("com.gg.mycmd.log: %@", filename.absoluteString)
+    do {
+      try str.write(to: filename, atomically: true, encoding: String.Encoding.utf8)
+    } catch {
+      NSLog("com.gg.mycmd.log: error: %@", error.localizedDescription)
+      // failed to write file – bad permissions, bad filename, missing permissions, or more likely it can't be converted to the encoding
+    }
+  }
+
+  func createFolder() {
+    let manager = FileManager.default
+    let DecomentFolder = manager.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask).last
+    let Folder = DecomentFolder?.appendingPathComponent("xxx")
+    do {
+      try manager.createDirectory(at: Folder!, withIntermediateDirectories: true, attributes: [:])
+    } catch {
+      NSLog("com.gg.mycmd.log: %@", error.localizedDescription)
+      print(error.localizedDescription)
+    }
   }
 
   override var prefersStatusBarHidden: Bool {
     return false
-  }
-
-  func verify_ac(_ params: inout [String: Any]) -> [String: Any] {
-    var params_data = ""
-    let keys = params.keys.sorted()
-    for key in keys {
-      params_data = params_data + key + String(describing: (params[key]!))
-    }
-    let private_key = "e2a5a1cdf459e89d9ff7f52a8bd2e9c035a34ad7"
-    params_data = params_data + private_key
-    NSLog("com.gg.mycmd.log: params_data: %@", String(describing: params_data))
-
-    let data = params_data.data(using: String.Encoding.utf8)!
-    let digest = Insecure.SHA1.hash(data: data)
-    // NSLog("com.gg.mycmd.log: digest.data: %@", String(describing: digest.data))
-    // NSLog("com.gg.mycmd.log: digest.hexStr: %@", digest.hexStr.lowercased())
-    params["Signature"] = digest.hexStr
-    return params
-  }
-
-  func paramsRequest(_ params: [String: Any]) {
-    var request = URLRequest(url: URL(string: "http://10.11.104.1/api")!)
-    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-    request.setValue("text/plain", forHTTPHeaderField: "Accept")
-    request.httpMethod = "POST"
-    request.httpBody = try? JSONSerialization.data(withJSONObject: params)
-    NSLog("com.gg.mycmd.log: httpBody: %@", String(decoding: request.httpBody!, as: UTF8.self))
-    let task = URLSession.shared.dataTask(with: request) { data, response, error in
-      guard let data = data, error == nil else {
-        NSLog("com.gg.mycmd.log: responseJSON: %@", String(describing: error?.localizedDescription))
-        return
-      }
-      let responseJSON = try? JSONSerialization.jsonObject(with: data, options: [])
-      if let responseJSON = responseJSON as? [String: Any] {
-        NSLog("com.gg.mycmd.log: responseJSON: %@", String(describing: responseJSON))
-      }
-    }
-    task.resume()
-  }
-
-  func ucloud(_ limit: Int, _ offset: Int) {
-    let PublicKey = "OmgolGAwCsGsMSo66+L0oDFKFUM6gVVKR0qsKTKwJr/zyCoKHsehIK8Ftq2DIotP"
-    var params = [String: Any]()
-    params = [
-      "PublicKey": PublicKey,
-      "Action": "DescribeVMInstance",
-      "Region": "cn",
-      "Zone": "zone-01",
-      "Limit": limit,
-      "Offset": offset,
-    ]
-    // NSLog("com.gg.mycmd.log: params: %@", String(describing: verify_ac(&params)))
-    paramsRequest(verify_ac(&params))
-
-    // for (key, value) in params {
-    //   NSLog("com.gg.mycmd.log: %@ : %@", key, String(describing: value))
-    // }
-    // NSLog("com.gg.mycmd.log: params: %@", String(describing: params))
   }
 
   func gotest() {
@@ -129,10 +110,12 @@ class ViewController: UIViewController, historyVCDelegate {
     textField.font = UIFont(name: "Consolas", size: 24)
     textField.attributedPlaceholder = NSAttributedString(
       string: "input command here ...",
-      attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemCyan])
+      attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemCyan]
+    )
     textField.addTarget(
-      self, action: #selector(resignFirstResponder), for: UIControl.Event.editingDidEndOnExit)
-    self.view.addSubview(textField)
+      self, action: #selector(resignFirstResponder), for: UIControl.Event.editingDidEndOnExit
+    )
+    view.addSubview(textField)
 
     runButton.frame = CGRect(x: screenWidth - 70, y: 50, width: 60, height: 50)
     runButton.backgroundColor = UIColor.systemBlue
@@ -143,7 +126,7 @@ class ViewController: UIViewController, historyVCDelegate {
     runButton.layer.borderWidth = 1
     runButton.layer.borderColor = UIColor.black.cgColor
     runButton.layer.cornerRadius = 8
-    self.view.addSubview(runButton)
+    view.addSubview(runButton)
 
     saveButton.frame = CGRect(x: 10, y: 110, width: 60, height: 50)
     saveButton.backgroundColor = UIColor.systemBlue
@@ -154,7 +137,7 @@ class ViewController: UIViewController, historyVCDelegate {
     saveButton.layer.borderWidth = 1
     saveButton.layer.borderColor = UIColor.black.cgColor
     saveButton.layer.cornerRadius = 8
-    self.view.addSubview(saveButton)
+    view.addSubview(saveButton)
 
     historyButton.frame = CGRect(x: 80, y: 110, width: 60, height: 50)
     historyButton.backgroundColor = UIColor.systemBlue
@@ -163,11 +146,12 @@ class ViewController: UIViewController, historyVCDelegate {
     historyButton.titleLabel?.font = UIFont(name: "Consolas", size: 12)
     historyButton.backgroundColor = UIColor.systemBackground
     historyButton.addTarget(
-      self, action: #selector(pressHistory), for: UIControl.Event.touchUpInside)
+      self, action: #selector(pressHistory), for: UIControl.Event.touchUpInside
+    )
     historyButton.layer.borderWidth = 1
     historyButton.layer.borderColor = UIColor.black.cgColor
     historyButton.layer.cornerRadius = 8
-    self.view.addSubview(historyButton)
+    view.addSubview(historyButton)
 
     textView.frame = CGRect(x: 10, y: 200, width: screenWidth - 20, height: 700)
     textView.backgroundColor = UIColor.black
@@ -215,33 +199,33 @@ class ViewController: UIViewController, historyVCDelegate {
 
   @objc func pressHistory() {
     let historyVC = historyVC()
-    historyVC.delegate = self  // used for historyVCDelegate
+    historyVC.delegate = self // used for historyVCDelegate
     //        let navController = UINavigationController(rootViewController: historyVC)
     //        historyVC.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.done, target: self, action: #selector(dismissHistory))
     //        historyVC.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.cancel, target: self, action: #selector(dismissHistory))
 
-    self.present(historyVC, animated: true, completion: nil)
+    present(historyVC, animated: true, completion: nil)
   }
 
   @objc func dismissHistory() {
-    self.dismiss(animated: true, completion: nil)
+    dismiss(animated: true, completion: nil)
   }
 
   func sampleData() {
     var cmdArray0: [String] = []
-    for i in 0...99 {
+    for i in 0 ... 99 {
       cmdArray0.append("value ucloud" + String(i))
     }
     UserDefaults.standard.set(cmdArray0, forKey: "mycmdKey0")
 
     var cmdArray1: [String] = []
-    for i in 0...50 {
+    for i in 0 ... 50 {
       cmdArray1.append("value google drive" + String(i))
     }
     UserDefaults.standard.set(cmdArray1, forKey: "mycmdKey1")
 
     var cmdArray2: [String] = []
-    for i in 0...60 {
+    for i in 0 ... 60 {
       cmdArray2.append("value imap" + String(i))
     }
     UserDefaults.standard.set(cmdArray2, forKey: "mycmdKey2")
@@ -259,7 +243,6 @@ class ViewController: UIViewController, historyVCDelegate {
     NSLog("com.gg.mycmd.log: userDidEnterInformation")
     textField.text = info
   }
-
 }
 
 protocol historyVCDelegate: AnyObject {
@@ -267,8 +250,7 @@ protocol historyVCDelegate: AnyObject {
 }
 
 class historyVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
-
-  weak var delegate: historyVCDelegate? = nil
+  weak var delegate: historyVCDelegate?
 
   //    private var myArray: NSArray = ["First","Second","Third"]
   var myTableView: UITableView!
@@ -277,23 +259,23 @@ class historyVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    self.view.backgroundColor = UIColor.systemBackground
+    view.backgroundColor = UIColor.systemBackground
 
     let mySC = UISegmentedControl(items: ["UCloud", "Google Drive", "IMAP"])
     mySC.frame = CGRect(x: 50, y: 20, width: 300, height: 30)
     mySC.selectedSegmentIndex = scIndex
     mySC.tintColor = UIColor.yellow
     mySC.backgroundColor = UIColor.systemGray
-    mySC.addTarget(self, action: #selector(self.segmentedValueChanged(_:)), for: .valueChanged)
-    self.view.addSubview(mySC)
+    mySC.addTarget(self, action: #selector(segmentedValueChanged(_:)), for: .valueChanged)
+    view.addSubview(mySC)
 
     myTableView = UITableView(
-      frame: CGRect(x: 0, y: 60, width: self.view.frame.width, height: self.view.frame.height))
+      frame: CGRect(x: 0, y: 60, width: view.frame.width, height: view.frame.height))
     myTableView.register(UITableViewCell.self, forCellReuseIdentifier: "MyCell")
     myTableView.dataSource = self
     myTableView.delegate = self
     // self.myTableView.isEditing = true
-    self.view.addSubview(myTableView)
+    view.addSubview(myTableView)
   }
 
   @objc func segmentedValueChanged(_ sender: UISegmentedControl!) {
@@ -302,23 +284,24 @@ class historyVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     myTableView.reloadData()
   }
 
-  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+  func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
     NSLog("com.gg.mycmd.log: didSelectRowAt %d", indexPath.row)
     //        print("Num: \(indexPath.row)")
     //        print("Value: \(myArray[indexPath.row])")
     delegate?.userDidEnterInformation(
       info: (UserDefaults.standard.array(forKey: "mycmdKey" + String(scIndex))![indexPath.row]
         as? String)!)
-    self.dismiss(animated: true)
+    dismiss(animated: true)
   }
 
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+  func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
     //        return myArray.count
     NSLog(
       "com.gg.mycmd.log: keys count: %d",
-      UserDefaults.standard.dictionaryRepresentation().keys.count)
+      UserDefaults.standard.dictionaryRepresentation().keys.count
+    )
     //        return cmdArray.count
-    return UserDefaults.standard.array(forKey: "mycmdKey" + String(scIndex))!.count
+    return UserDefaults.standard.array(forKey: "mycmdKey" + String(scIndex))?.count ?? 0
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -329,12 +312,12 @@ class historyVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     return cell
   }
 
-  func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+  func tableView(_: UITableView, canEditRowAt _: IndexPath) -> Bool {
     return true
   }
 
   func tableView(
-    _ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle,
+    _: UITableView, commit editingStyle: UITableViewCell.EditingStyle,
     forRowAt indexPath: IndexPath
   ) {
     if editingStyle == UITableViewCell.EditingStyle.delete {
@@ -342,7 +325,8 @@ class historyVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
       let alert = UIAlertController(
         title: nil, message: "Are you sure you'd like to delete this cell",
-        preferredStyle: UIAlertController.Style.alert)
+        preferredStyle: UIAlertController.Style.alert
+      )
 
       alert.addAction(
         UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) { _ in
@@ -370,20 +354,20 @@ class historyVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
   //   // return UITableViewCell.EditingStyle.delete
   // }
 
-  func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath)
+  func tableView(_: UITableView, shouldIndentWhileEditingRowAt _: IndexPath)
     -> Bool
   {
     return false
   }
 
   func tableView(
-    _ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath,
+    _: UITableView, moveRowAt sourceIndexPath: IndexPath,
     to destinationIndexPath: IndexPath
   ) {
-    var cmdArray = UserDefaults.standard.array(forKey: "mycmdKey" + String(self.scIndex))
+    var cmdArray = UserDefaults.standard.array(forKey: "mycmdKey" + String(scIndex))
     let movedRow = cmdArray?[sourceIndexPath.row]
     cmdArray?.remove(at: sourceIndexPath.row)
     cmdArray?.insert(movedRow!, at: destinationIndexPath.row)
-    UserDefaults.standard.set(cmdArray, forKey: "mycmdKey" + String(self.scIndex))
+    UserDefaults.standard.set(cmdArray, forKey: "mycmdKey" + String(scIndex))
   }
 }
