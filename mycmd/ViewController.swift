@@ -171,34 +171,33 @@ class ViewController: UIViewController, historyVCDelegate {
   }
 
   @objc func pressRun() {
-      self.textView.text = ""
-      let cmds = textField.text?.components(separatedBy: " ")
-      switch cmds![0] {
-      case "totp":
-          textView.text = totp_mytotp(cmds![1])
-      case "ping":
+    textView.text = ""
+    let cmds = textField.text?.components(separatedBy: " ")
+    switch cmds![0] {
+    case "totp":
+      textView.text = totp_mytotp(cmds![1])
+    case "ping":
 //          textView.text = myicmp_myping(cmds![1])
-          let once = try? SwiftyPing(host: cmds![1], configuration: PingConfiguration(interval: 0.5, with: 5), queue: DispatchQueue.global())
-          once?.observer = { (response) in
-              self.textView.text += String(response.byteCount!) + " bytes"+" from "
-              self.textView.text += response.ipAddress!
-              self.textView.text += ": time=" + String(format: "%.3f", response.duration*1000) + " ms\n"
-          }
-          once?.targetCount = 4
-          try? once?.startPinging()
-      default:
-          print("no cmds")
+      let once = try? SwiftyPing(host: cmds![1], configuration: PingConfiguration(interval: 0.5, with: 5), queue: DispatchQueue.global())
+      once?.observer = { response in
+        self.textView.text += String(response.byteCount!) + " bytes" + " from "
+        self.textView.text += response.ipAddress!
+        self.textView.text += ": time=" + String(format: "%.3f", response.duration * 1000) + " ms\n"
       }
+      once?.targetCount = 4
+      try? once?.startPinging()
+    default:
+      print("no cmds")
+    }
   }
 
   @objc func pressSave() {
 //            saveData(textField.text!)
-      var cmdArray = UserDefaults.standard.array(forKey: "mycmdKey2")
-      cmdArray?.insert(textField.text as Any, at: 0)
-      UserDefaults.standard.set(cmdArray, forKey: "mycmdKey2")
-      
+    var cmdArray = UserDefaults.standard.array(forKey: "mycmdKey2")
+    cmdArray?.insert(textField.text as Any, at: 0)
+    UserDefaults.standard.set(cmdArray, forKey: "mycmdKey2")
+
 //      NSLog("com.gg.mycmd.log: saved cmd: %@", UserDefaults.standard.array(forKey: "mycmdKey2")![0] as! String)
-      
   }
 
   //    @objc func pressHistory() {
@@ -228,17 +227,17 @@ class ViewController: UIViewController, historyVCDelegate {
   @objc func dismissHistory() {
     dismiss(animated: true, completion: nil)
   }
-    
-    func initData() {
-      var cmdArray0: [String] = []
-      UserDefaults.standard.set(cmdArray0, forKey: "mycmdKey0")
 
-      var cmdArray1: [String] = []
-      UserDefaults.standard.set(cmdArray1, forKey: "mycmdKey1")
+  func initData() {
+    let cmdArray0: [String] = []
+    UserDefaults.standard.set(cmdArray0, forKey: "mycmdKey0")
 
-      var cmdArray2: [String] = []
-      UserDefaults.standard.set(cmdArray2, forKey: "mycmdKey2")
-    }
+    let cmdArray1: [String] = []
+    UserDefaults.standard.set(cmdArray1, forKey: "mycmdKey1")
+
+    let cmdArray2: [String] = []
+    UserDefaults.standard.set(cmdArray2, forKey: "mycmdKey2")
+  }
 
   func sampleData() {
     var cmdArray0: [String] = []
