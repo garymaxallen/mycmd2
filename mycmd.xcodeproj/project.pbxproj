@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6379092129CE01FF0033E779 /* mycgo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6379091F29CE01FF0033E779 /* mycgo.a */; };
+		6379092429CE05BC0033E779 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6379092329CE05BC0033E779 /* Utility.swift */; };
+		6379092629CE12DC0033E779 /* SwiftyPing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6379092529CE12DC0033E779 /* SwiftyPing.swift */; };
 		6391A52A29BDB1E900E52672 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6391A52929BDB1E900E52672 /* AppDelegate.swift */; };
 		6391A52C29BDB1E900E52672 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6391A52B29BDB1E900E52672 /* SceneDelegate.swift */; };
 		6391A52E29BDB1E900E52672 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6391A52D29BDB1E900E52672 /* ViewController.swift */; };
@@ -15,6 +18,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6379091F29CE01FF0033E779 /* mycgo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = mycgo.a; sourceTree = "<group>"; };
+		6379092029CE01FF0033E779 /* mycgo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mycgo.h; sourceTree = "<group>"; };
+		6379092229CE02630033E779 /* mycmd-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "mycmd-Bridging-Header.h"; sourceTree = "<group>"; };
+		6379092329CE05BC0033E779 /* Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
+		6379092529CE12DC0033E779 /* SwiftyPing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftyPing.swift; sourceTree = "<group>"; };
 		6391A52629BDB1E900E52672 /* mycmd.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = mycmd.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6391A52929BDB1E900E52672 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6391A52B29BDB1E900E52672 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -29,6 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6379092129CE01FF0033E779 /* mycgo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -38,6 +47,7 @@
 		6391A51D29BDB1E900E52672 = {
 			isa = PBXGroup;
 			children = (
+				6379092229CE02630033E779 /* mycmd-Bridging-Header.h */,
 				6391A52829BDB1E900E52672 /* mycmd */,
 				6391A52729BDB1E900E52672 /* Products */,
 			);
@@ -54,10 +64,14 @@
 		6391A52829BDB1E900E52672 /* mycmd */ = {
 			isa = PBXGroup;
 			children = (
+				6379091F29CE01FF0033E779 /* mycgo.a */,
+				6379092029CE01FF0033E779 /* mycgo.h */,
 				6391A53F29BDBBF700E52672 /* consola.ttf */,
 				6391A52929BDB1E900E52672 /* AppDelegate.swift */,
 				6391A52B29BDB1E900E52672 /* SceneDelegate.swift */,
 				6391A52D29BDB1E900E52672 /* ViewController.swift */,
+				6379092529CE12DC0033E779 /* SwiftyPing.swift */,
+				6379092329CE05BC0033E779 /* Utility.swift */,
 				6391A53229BDB1EA00E52672 /* Assets.xcassets */,
 				6391A53729BDB1EA00E52672 /* Info.plist */,
 			);
@@ -134,7 +148,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6379092429CE05BC0033E779 /* Utility.swift in Sources */,
 				6391A52E29BDB1E900E52672 /* ViewController.swift in Sources */,
+				6379092629CE12DC0033E779 /* SwiftyPing.swift in Sources */,
 				6391A52A29BDB1E900E52672 /* AppDelegate.swift in Sources */,
 				6391A52C29BDB1E900E52672 /* SceneDelegate.swift in Sources */,
 			);
@@ -199,6 +215,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = "mycmd-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -252,6 +269,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OBJC_BRIDGING_HEADER = "mycmd-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -275,11 +293,16 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/mycmd",
+				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gg.mycmd;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "mycmd-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -303,11 +326,16 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/mycmd",
+				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gg.mycmd;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "mycmd-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
