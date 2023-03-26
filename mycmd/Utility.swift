@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import mycgo
 
 func totp_mytotp(_ secret: String) -> String {
   //   let str = "AICRSHHFUHB2XGSHLO6QSNDMJYPIUKQC" //coinex secret

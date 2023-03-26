@@ -11,6 +11,9 @@ let package = Package(
   products: [
     .library(name: packageName, targets: [packageName]),
   ],
+  dependencies: [
+    .package(path: "mycgo")
+  ],
   targets: [
     .target(
       name: packageName,
