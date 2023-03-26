@@ -707,8 +707,9 @@ func paramsRequest(params map[string]interface{}) interface{} {
 		log.Fatalln("get json from params error: ", err)
 	}
 	// fmt.Println("params: ", string(jsonByte))
-
-	request, err := http.NewRequest("POST", "http://10.11.104.1/api", bytes.NewReader(jsonByte))
+	host := "10.11.104.1"
+	host = "192.168.237.2"
+	request, err := http.NewRequest("POST", "http://"+host+"/api", bytes.NewReader(jsonByte))
 	//request, err := http.NewRequest("POST", "http://192.168.237.2/api", bytes.NewReader(jsonByte))
 	request.Header.Set("Content-Type", "application/json")
 	request.Header.Set("Accept", "text/plain")

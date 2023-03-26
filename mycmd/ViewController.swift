@@ -182,6 +182,10 @@ class ViewController: UIViewController, historyVCDelegate {
       }
       once?.targetCount = 4
       try? once?.startPinging()
+    case "ucloud":
+      if cmds![1] == "list" {
+        textView.text = ucloud_listVM(Int(cmds![2])!, Int(cmds![3])!)
+      }
     default:
       print("no cmds")
     }
