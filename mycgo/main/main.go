@@ -5,7 +5,6 @@ import "C"
 // other imports should be seperate from the special Cgo import
 import (
 	"fmt"
-	"mycgo/myicmp"
 	"mycgo/totp"
 	"mycgo/ucloud"
 )
@@ -48,11 +47,6 @@ func getipnum() int {
 //export mytotp
 func mytotp(secret *C.char) *C.char {
 	return C.CString(totp.Totp(C.GoString(secret)))
-}
-
-//export myping
-func myping(address *C.char) *C.char {
-	return C.CString(myicmp.Myping(C.GoString(address)))
 }
 
 func main() {

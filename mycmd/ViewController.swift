@@ -108,7 +108,7 @@ class ViewController: UIViewController, historyVCDelegate {
     textField.backgroundColor = UIColor.black
     //        textField.backgroundColor = UIColor.systemCyan
     textField.textColor = UIColor.white
-    textField.font = UIFont(name: "Consolas", size: 24)
+    textField.font = UIFont(name: "Consolas", size: 20)
     textField.attributedPlaceholder = NSAttributedString(
       string: "input command here ...",
       attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemCyan]
@@ -122,7 +122,6 @@ class ViewController: UIViewController, historyVCDelegate {
     runButton.backgroundColor = UIColor.systemBlue
     runButton.setTitle("RUN", for: UIControl.State.normal)
     runButton.setTitleColor(UIColor.black, for: UIControl.State.normal)
-    runButton.backgroundColor = UIColor.systemBackground
     runButton.addTarget(self, action: #selector(pressRun), for: UIControl.Event.touchUpInside)
     runButton.layer.borderWidth = 1
     runButton.layer.borderColor = UIColor.black.cgColor
@@ -133,7 +132,6 @@ class ViewController: UIViewController, historyVCDelegate {
     saveButton.backgroundColor = UIColor.systemBlue
     saveButton.setTitle("SAVE", for: UIControl.State.normal)
     saveButton.setTitleColor(UIColor.black, for: UIControl.State.normal)
-    saveButton.backgroundColor = UIColor.systemBackground
     saveButton.addTarget(self, action: #selector(pressSave), for: UIControl.Event.touchUpInside)
     saveButton.layer.borderWidth = 1
     saveButton.layer.borderColor = UIColor.black.cgColor
@@ -145,7 +143,6 @@ class ViewController: UIViewController, historyVCDelegate {
     historyButton.setTitle("HISTORY", for: UIControl.State.normal)
     historyButton.setTitleColor(UIColor.black, for: UIControl.State.normal)
     historyButton.titleLabel?.font = UIFont(name: "Consolas", size: 12)
-    historyButton.backgroundColor = UIColor.systemBackground
     historyButton.addTarget(
       self, action: #selector(pressHistory), for: UIControl.Event.touchUpInside
     )
@@ -157,7 +154,7 @@ class ViewController: UIViewController, historyVCDelegate {
     textView.frame = CGRect(x: 10, y: 200, width: screenWidth - 20, height: 700)
     textView.backgroundColor = UIColor.black
     textView.textColor = UIColor.white
-    textView.font = UIFont(name: "Consolas", size: 24)
+    textView.font = UIFont(name: "Consolas", size: 20)
     textView.isEditable = false
     textView.isScrollEnabled = true
     // textView.text = """
