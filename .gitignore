@@ -5,3 +5,6 @@ build
 mycmd.xcodeproj/xcuserdata/
 mycmd.xcodeproj/xcshareddata/
 mycmd.xcodeproj/project.xcworkspace/
+Payload
+*.ipa
+*.a
