@@ -1,0 +1,4 @@
+module mycgo [system] {
+  header "mycgo.h"
+  export *
+}
