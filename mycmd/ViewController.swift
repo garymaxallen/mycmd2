@@ -176,6 +176,7 @@ class ViewController: UIViewController, historyVCDelegate {
     }
     switch cmds![0] {
     case "totp":
+      textView.text = ""
       textView.text = totp_mytotp(cmds![1])
     case "ping":
       if cmds![1] == "stop" {
@@ -187,6 +188,7 @@ class ViewController: UIViewController, historyVCDelegate {
       } else {
         pinger = try? SwiftyPing(host: cmds![1], configuration: PingConfiguration(interval: 0.5, with: 5), queue: DispatchQueue.global())
         pinger?.observer = { response in
+          self.textView.text = ""
           self.textView.text += String(response.byteCount!) + " bytes" + " from " + response.ipAddress!
           // self.textView.text += response.ipAddress!
           self.textView.text += ": time=" + String(format: "%.2f", response.duration * 1000) + " ms\n"
@@ -196,13 +198,16 @@ class ViewController: UIViewController, historyVCDelegate {
       }
     case "ucloud":
       if cmds![1] == "listvm" {
+        textView.text = ""
         textView.text = ucloud_listVM(Int(cmds![2])!, Int(cmds![3])!)
       }
     case "mydrive":
       if cmds![1] == "list" {
         if cmds?.count == 2 {
+          textView.text = ""
           textView.text = mydrive_list("root")
         } else {
+          textView.text = ""
           textView.text = mydrive_list(cmds![2])
         }
       }
@@ -254,7 +259,7 @@ class ViewController: UIViewController, historyVCDelegate {
       textView.text += "mycmdKey0 is nil\n"
       let cmdArray: [String] = []
       UserDefaults.standard.set(cmdArray, forKey: "mycmdKey0")
-    }else {
+    } else {
       textView.text += "mycmdKey0 is not nil\n"
     }
 
@@ -262,7 +267,7 @@ class ViewController: UIViewController, historyVCDelegate {
       textView.text += "mycmdKey1 is nil\n"
       let cmdArray: [String] = []
       UserDefaults.standard.set(cmdArray, forKey: "mycmdKey1")
-    }else {
+    } else {
       textView.text += "mycmdKey1 is not nil\n"
     }
 
@@ -270,7 +275,7 @@ class ViewController: UIViewController, historyVCDelegate {
       textView.text += "mycmdKey2 is nil\n"
       let cmdArray: [String] = []
       UserDefaults.standard.set(cmdArray, forKey: "mycmdKey2")
-    }else {
+    } else {
       textView.text += "mycmdKey2 is not nil\n"
     }
   }
@@ -353,7 +358,7 @@ class historyVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     //        print("Num: \(indexPath.row)")
     //        print("Value: \(myArray[indexPath.row])")
     delegate?.userDidEnterInformation(
-      info: (UserDefaults.standard.stringArray(forKey: "mycmdKey" + String(scIndex))![indexPath.row]))
+      info: UserDefaults.standard.stringArray(forKey: "mycmdKey" + String(scIndex))![indexPath.row])
     dismiss(animated: true)
   }
 
