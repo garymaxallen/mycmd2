@@ -81,6 +81,7 @@ extern char* showImage(char* id);
 extern char* deleteEIP(char* id);
 extern GoInt getipnum();
 extern char* mytotp(char* secret);
+extern char* mydrive_listById(char* id);
 
 #ifdef __cplusplus
 }

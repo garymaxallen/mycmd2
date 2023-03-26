@@ -17,6 +17,8 @@ class ViewController: UIViewController, historyVCDelegate {
   let saveButton = UIButton(type: UIButton.ButtonType.system)
   let historyButton = UIButton(type: UIButton.ButtonType.system)
 
+  var pinger: SwiftyPing?
+
   override func viewDidLoad() {
     super.viewDidLoad()
     NSLog("com.gg.mycmd.log: %@", "viewDidLoad()")
@@ -28,9 +30,9 @@ class ViewController: UIViewController, historyVCDelegate {
 
     // sampleData()
     initData()
-    createFile()
-    createFolder()
-    readFile()
+    // createFile()
+    // createFolder()
+    // readFile()
   }
 
   func listFiles() {
@@ -104,11 +106,11 @@ class ViewController: UIViewController, historyVCDelegate {
   }
 
   func setMyView() {
-    textField.frame = CGRect(x: 10, y: 50, width: screenWidth - 20 - 60 - 10, height: 50)
+    textField.frame = CGRect(x: 0, y: 50, width: screenWidth - 20 - 60, height: 50)
     textField.backgroundColor = UIColor.black
     //        textField.backgroundColor = UIColor.systemCyan
     textField.textColor = UIColor.white
-    textField.font = UIFont(name: "Consolas", size: 20)
+    textField.font = UIFont(name: "Consolas", size: 18)
     textField.attributedPlaceholder = NSAttributedString(
       string: "input command here ...",
       attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemCyan]
@@ -151,10 +153,10 @@ class ViewController: UIViewController, historyVCDelegate {
     historyButton.layer.cornerRadius = 8
     view.addSubview(historyButton)
 
-    textView.frame = CGRect(x: 10, y: 200, width: screenWidth - 20, height: 700)
+    textView.frame = CGRect(x: 0, y: 180, width: screenWidth, height: screenHeight - 180)
     textView.backgroundColor = UIColor.black
     textView.textColor = UIColor.white
-    textView.font = UIFont(name: "Consolas", size: 20)
+    textView.font = UIFont(name: "Consolas", size: 18)
     textView.isEditable = false
     textView.isScrollEnabled = true
     // textView.text = """
@@ -168,26 +170,44 @@ class ViewController: UIViewController, historyVCDelegate {
   }
 
   @objc func pressRun() {
-    textView.text = ""
     let cmds = textField.text?.components(separatedBy: " ")
+    if cmds?.count == 0 {
+      textView.text = "no cmd"
+    }
     switch cmds![0] {
     case "totp":
       textView.text = totp_mytotp(cmds![1])
     case "ping":
-      let once = try? SwiftyPing(host: cmds![1], configuration: PingConfiguration(interval: 0.5, with: 5), queue: DispatchQueue.global())
-      once?.observer = { response in
-        self.textView.text += String(response.byteCount!) + " bytes" + " from "
-        self.textView.text += response.ipAddress!
-        self.textView.text += ": time=" + String(format: "%.3f", response.duration * 1000) + " ms\n"
+      if cmds![1] == "stop" {
+        if pinger != nil {
+          pinger?.stopPinging()
+        } else {
+          textView.text = "pinger is nil"
+        }
+      } else {
+        pinger = try? SwiftyPing(host: cmds![1], configuration: PingConfiguration(interval: 0.5, with: 5), queue: DispatchQueue.global())
+        pinger?.observer = { response in
+          self.textView.text += String(response.byteCount!) + " bytes" + " from " + response.ipAddress!
+          // self.textView.text += response.ipAddress!
+          self.textView.text += ": time=" + String(format: "%.2f", response.duration * 1000) + " ms\n"
+        }
+        // pinger?.targetCount = 4
+        try? pinger?.startPinging()
       }
-      once?.targetCount = 4
-      try? once?.startPinging()
     case "ucloud":
-      if cmds![1] == "list" {
+      if cmds![1] == "listvm" {
         textView.text = ucloud_listVM(Int(cmds![2])!, Int(cmds![3])!)
       }
+    case "mydrive":
+      if cmds![1] == "list" {
+        if cmds?.count == 2 {
+          textView.text = mydrive_list("root")
+        } else {
+          textView.text = mydrive_list(cmds![2])
+        }
+      }
     default:
-      print("no cmds")
+      textView.text = "incorrect cmd"
     }
   }
 
@@ -229,14 +249,30 @@ class ViewController: UIViewController, historyVCDelegate {
   }
 
   func initData() {
-    let cmdArray0: [String] = []
-    UserDefaults.standard.set(cmdArray0, forKey: "mycmdKey0")
+    textView.text = ""
+    if UserDefaults.standard.stringArray(forKey: "mycmdKey0") == nil {
+      textView.text += "mycmdKey0 is nil\n"
+      let cmdArray: [String] = []
+      UserDefaults.standard.set(cmdArray, forKey: "mycmdKey0")
+    }else {
+      textView.text += "mycmdKey0 is not nil\n"
+    }
 
-    let cmdArray1: [String] = []
-    UserDefaults.standard.set(cmdArray1, forKey: "mycmdKey1")
+    if UserDefaults.standard.stringArray(forKey: "mycmdKey1") == nil {
+      textView.text += "mycmdKey1 is nil\n"
+      let cmdArray: [String] = []
+      UserDefaults.standard.set(cmdArray, forKey: "mycmdKey1")
+    }else {
+      textView.text += "mycmdKey1 is not nil\n"
+    }
 
-    let cmdArray2: [String] = []
-    UserDefaults.standard.set(cmdArray2, forKey: "mycmdKey2")
+    if UserDefaults.standard.stringArray(forKey: "mycmdKey2") == nil {
+      textView.text += "mycmdKey2 is nil\n"
+      let cmdArray: [String] = []
+      UserDefaults.standard.set(cmdArray, forKey: "mycmdKey2")
+    }else {
+      textView.text += "mycmdKey2 is not nil\n"
+    }
   }
 
   func sampleData() {
@@ -317,8 +353,7 @@ class historyVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     //        print("Num: \(indexPath.row)")
     //        print("Value: \(myArray[indexPath.row])")
     delegate?.userDidEnterInformation(
-      info: (UserDefaults.standard.array(forKey: "mycmdKey" + String(scIndex))![indexPath.row]
-        as? String)!)
+      info: (UserDefaults.standard.stringArray(forKey: "mycmdKey" + String(scIndex))![indexPath.row]))
     dismiss(animated: true)
   }
 
@@ -329,14 +364,14 @@ class historyVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
       UserDefaults.standard.dictionaryRepresentation().keys.count
     )
     //        return cmdArray.count
-    return UserDefaults.standard.array(forKey: "mycmdKey" + String(scIndex))?.count ?? 0
+    return UserDefaults.standard.stringArray(forKey: "mycmdKey" + String(scIndex))?.count ?? 0
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for: indexPath as IndexPath)
     //                cell.textLabel!.text = "\(myArray[indexPath.row])"
     cell.textLabel!.text =
-      UserDefaults.standard.array(forKey: "mycmdKey" + String(scIndex))![indexPath.row] as? String
+      UserDefaults.standard.stringArray(forKey: "mycmdKey" + String(scIndex))![indexPath.row]
     return cell
   }
 
@@ -358,7 +393,7 @@ class historyVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
       alert.addAction(
         UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) { _ in
-          var cmdArray = UserDefaults.standard.array(forKey: "mycmdKey" + String(self.scIndex))
+          var cmdArray = UserDefaults.standard.stringArray(forKey: "mycmdKey" + String(self.scIndex))
           cmdArray?.remove(at: indexPath.row)
           UserDefaults.standard.set(cmdArray, forKey: "mycmdKey" + String(self.scIndex))
           self.myTableView.beginUpdates()
@@ -392,7 +427,7 @@ class historyVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     _: UITableView, moveRowAt sourceIndexPath: IndexPath,
     to destinationIndexPath: IndexPath
   ) {
-    var cmdArray = UserDefaults.standard.array(forKey: "mycmdKey" + String(scIndex))
+    var cmdArray = UserDefaults.standard.stringArray(forKey: "mycmdKey" + String(scIndex))
     let movedRow = cmdArray?[sourceIndexPath.row]
     cmdArray?.remove(at: sourceIndexPath.row)
     cmdArray?.insert(movedRow!, at: destinationIndexPath.row)

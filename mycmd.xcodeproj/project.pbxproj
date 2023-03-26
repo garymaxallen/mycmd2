@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		634C6FC129D08E45006A7DF9 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 634C6FC029D08E45006A7DF9 /* libresolv.tbd */; };
 		6379092129CE01FF0033E779 /* mycgo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6379091F29CE01FF0033E779 /* mycgo.a */; };
 		6379092429CE05BC0033E779 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6379092329CE05BC0033E779 /* Utility.swift */; };
 		6379092629CE12DC0033E779 /* SwiftyPing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6379092529CE12DC0033E779 /* SwiftyPing.swift */; };
@@ -18,6 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		634C6FC029D08E45006A7DF9 /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		6379091F29CE01FF0033E779 /* mycgo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = mycgo.a; sourceTree = "<group>"; };
 		6379092029CE01FF0033E779 /* mycgo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mycgo.h; sourceTree = "<group>"; };
 		6379092229CE02630033E779 /* mycmd-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "mycmd-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -37,6 +39,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				634C6FC129D08E45006A7DF9 /* libresolv.tbd in Frameworks */,
 				6379092129CE01FF0033E779 /* mycgo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -44,6 +47,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		634C6FBF29D08E45006A7DF9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				634C6FC029D08E45006A7DF9 /* libresolv.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		6391A51D29BDB1E900E52672 = {
 			isa = PBXGroup;
 			children = (
@@ -51,6 +62,7 @@
 				6379092229CE02630033E779 /* mycmd-Bridging-Header.h */,
 				6391A52829BDB1E900E52672 /* mycmd */,
 				6391A52729BDB1E900E52672 /* Products */,
+				634C6FBF29D08E45006A7DF9 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};

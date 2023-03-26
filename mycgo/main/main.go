@@ -5,6 +5,7 @@ import "C"
 // other imports should be seperate from the special Cgo import
 import (
 	"fmt"
+	"mycgo/mydrive"
 	"mycgo/totp"
 	"mycgo/ucloud"
 )
@@ -49,8 +50,16 @@ func mytotp(secret *C.char) *C.char {
 	return C.CString(totp.Totp(C.GoString(secret)))
 }
 
+// mydrive
+
+//export mydrive_listById
+func mydrive_listById(id *C.char) *C.char {
+	return C.CString(mydrive.ListById(C.GoString(id)))
+}
+
 func main() {
 	fmt.Println("ggggg")
+	fmt.Println(mydrive.ListById("root"))
 	// fmt.Println(myicmp.Myping("www.sohu.com"))
 	// fmt.Println("getipnum(): ", getipnum())
 	// totp.Totp("AICRSHHFUHB2XGSHLO6QSNDMJYPIUKQC")
