@@ -12,8 +12,3 @@ func totp_mytotp(_ secret: String) -> String {
   let cStr = mytotp(UnsafeMutablePointer<Int8>(mutating: (secret as NSString).utf8String))
   return String(cString: cStr!, encoding: String.Encoding.utf8)!
 }
-
-func myicmp_myping(_ address: String) -> String {
-  let cStr = myping(UnsafeMutablePointer<Int8>(mutating: (address as NSString).utf8String))
-  return String(cString: cStr!, encoding: String.Encoding.utf8)!
-}

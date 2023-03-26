@@ -174,7 +174,6 @@ class ViewController: UIViewController, historyVCDelegate {
     case "totp":
       textView.text = totp_mytotp(cmds![1])
     case "ping":
-//          textView.text = myicmp_myping(cmds![1])
       let once = try? SwiftyPing(host: cmds![1], configuration: PingConfiguration(interval: 0.5, with: 5), queue: DispatchQueue.global())
       once?.observer = { response in
         self.textView.text += String(response.byteCount!) + " bytes" + " from "
