@@ -47,6 +47,7 @@
 		6391A51D29BDB1E900E52672 = {
 			isa = PBXGroup;
 			children = (
+				63B53B6729D0693E00F1A7FC /* mycgo */,
 				6379092229CE02630033E779 /* mycmd-Bridging-Header.h */,
 				6391A52829BDB1E900E52672 /* mycmd */,
 				6391A52729BDB1E900E52672 /* Products */,
@@ -64,8 +65,6 @@
 		6391A52829BDB1E900E52672 /* mycmd */ = {
 			isa = PBXGroup;
 			children = (
-				6379091F29CE01FF0033E779 /* mycgo.a */,
-				6379092029CE01FF0033E779 /* mycgo.h */,
 				6391A53F29BDBBF700E52672 /* consola.ttf */,
 				6391A52929BDB1E900E52672 /* AppDelegate.swift */,
 				6391A52B29BDB1E900E52672 /* SceneDelegate.swift */,
@@ -76,6 +75,15 @@
 				6391A53729BDB1EA00E52672 /* Info.plist */,
 			);
 			path = mycmd;
+			sourceTree = "<group>";
+		};
+		63B53B6729D0693E00F1A7FC /* mycgo */ = {
+			isa = PBXGroup;
+			children = (
+				6379091F29CE01FF0033E779 /* mycgo.a */,
+				6379092029CE01FF0033E779 /* mycgo.h */,
+			);
+			path = mycgo;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
